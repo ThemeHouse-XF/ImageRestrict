@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<addon addon_id="ThemeHouse_ImageRestrict" title="[⌂] Image Restrictions" version_string="1.0.0" version_id="1447261019" url="" install_callback_class="ThemeHouse_Install" install_callback_method="install" uninstall_callback_class="ThemeHouse_Install" uninstall_callback_method="uninstall">
+  <admin_navigation/>
+  <admin_permissions/>
+  <admin_style_properties/>
+  <admin_templates/>
+  <admin_template_modifications/>
+  <code_events/>
+  <code_event_listeners>
+    <listener event_id="controller_pre_dispatch" execute_order="10" callback_class="ThemeHouse_Listener_ControllerPreDispatch" callback_method="controllerPreDispatch" active="1" hint="" description=""/>
+    <listener event_id="file_health_check" execute_order="10" callback_class="ThemeHouse_ImageRestrict_Listener_FileHealthCheck" callback_method="fileHealthCheck" active="1" hint="" description=""/>
+    <listener event_id="init_dependencies" execute_order="10" callback_class="ThemeHouse_Listener_InitDependencies" callback_method="initDependencies" active="1" hint="" description=""/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_ImageRestrict_Listener_LoadClass" callback_method="loadClassController" active="0" hint="XenForo_ControllerPublic_Forum" description="XenForo_ControllerPublic_Forum (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_ImageRestrict_Listener_LoadClass" callback_method="loadClassController" active="0" hint="XenForo_ControllerPublic_Post" description="XenForo_ControllerPublic_Post (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_ImageRestrict_Listener_LoadClass" callback_method="loadClassController" active="0" hint="XenForo_ControllerPublic_Thread" description="XenForo_ControllerPublic_Thread (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_ImageRestrict_Listener_LoadClass" callback_method="loadClassModel" active="0" hint="XenForo_Model_Attachment" description="XenForo_Model_Attachment (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_ImageRestrict_Listener_LoadClass" callback_method="loadClassModel" active="0" hint="XenForo_Model_Post" description="XenForo_Model_Post (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_ImageRestrict_Listener_LoadClass" callback_method="loadClassDataWriter" active="0" hint="XenForo_DataWriter_DiscussionMessage_Post" description="XenForo_DataWriter_DiscussionMessage_Post (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class_controller" execute_order="10" callback_class="ThemeHouse_ImageRestrict_Listener_LoadClass" callback_method="loadClassController" active="1" hint="" description="(For XenForo 1.1 and below)" compatibility_switch="1"/>
+    <listener event_id="load_class_datawriter" execute_order="10" callback_class="ThemeHouse_ImageRestrict_Listener_LoadClass" callback_method="loadClassDataWriter" active="1" hint="" description="(For XenForo 1.1 and below)" compatibility_switch="1"/>
+    <listener event_id="load_class_model" execute_order="10" callback_class="ThemeHouse_ImageRestrict_Listener_LoadClass" callback_method="loadClassModel" active="1" hint="" description="(For XenForo 1.1 and below)" compatibility_switch="1"/>
+    <listener event_id="template_create" execute_order="10" callback_class="ThemeHouse_ImageRestrict_Listener_TemplateCreate" callback_method="templateCreate" active="1" hint="" description="(For XenForo 1.1 and below)" compatibility_switch="1"/>
+    <listener event_id="template_post_render" execute_order="10" callback_class="ThemeHouse_ImageRestrict_Listener_TemplatePostRender" callback_method="templatePostRender" active="1" hint="" description="(For XenForo 1.1 and below)" compatibility_switch="1"/>
+  </code_event_listeners>
+  <cron/>
+  <email_templates/>
+  <email_template_modifications/>
+  <optiongroups/>
+  <permissions>
+    <permission_groups/>
+    <permissions/>
+    <interface_groups/>
+  </permissions>
+  <phrases>
+    <phrase title="th_imagerestriction_users_not_found_x_imagerestriction" version_id="1" version_string="0.9"><![CDATA[Image Restriction can not be applied to non-users like {users}...]]></phrase>
+    <phrase title="th_users_hint_imagerestriction" version_id="1" version_string="0.9"><![CDATA[These users won't be able to see images in this post.]]></phrase>
+    <phrase title="th_users_imagerestriction" version_id="1" version_string="0.9"><![CDATA[Image Restriction Users]]></phrase>
+    <phrase title="th_you_cant_deny_access_to_staff_members_imagerestriction" version_id="1" version_string="0.9"><![CDATA[You can't deny access to staff members.]]></phrase>
+    <phrase title="th_you_have_been_restricted_from_seeing_this_imagerestriction" version_id="1" version_string="0.9"><![CDATA[You have been restricted from seeing this.]]></phrase>
+  </phrases>
+  <route_prefixes>
+    <route_type type="public">
+      <prefix original_prefix="restricted-images" class="ThemeHouse_ImageRestrict_Route_Prefix_Masked" build_link="data_only"/>
+    </route_type>
+  </route_prefixes>
+  <style_properties/>
+  <templates>
+    <template title="th_form_stuff_imagerestriction" version_id="1372888909" version_string="1.0.0"><![CDATA[<xen:require js="js/themehouse/imagerestriction/image_restriction.js" />
+<dl class="ctrlUnit ImageRestrictionToBeInjected" style="display: none" data-targetselector=".xenForm > fieldset" data-targetlast="1" data-insertmethod="appendTo">
+	<dt><label>{xen:phrase th_users_imagerestriction}:</label></dt>
+	<dd>
+		<ul>
+			<xen:if is="{$ImageRestrictionUsers}">
+				<xen:foreach loop="$ImageRestrictionUsers" key="$counter" value="$user">
+					<li><xen:include template="th_form_stuff_single_imagerestriction" /></li>
+				</xen:foreach>
+			</xen:if>
+		
+			<li class="ImageRestrictionAutoGrow">
+				<xen:include template="th_form_stuff_single_imagerestriction">
+					<xen:set var="$counter">{xen:if '{$ImageRestrictionUsers}', '{xen:count $ImageRestrictionUsers}', '0'}</xen:set>
+					<xen:set var="$user"></xen:set>
+				</xen:include>
+			</li>
+		</ul>
+		<p class="explain">{xen:phrase th_users_hint_imagerestriction}</p>
+		<input type="hidden" name="ImageRestrictionDataIsComing" value="1" />
+	</dd>
+</dl>]]></template>
+    <template title="th_form_stuff_single_imagerestriction" version_id="1371472338" version_string="1.0.0"><![CDATA[<input type="text" name="ImageRestrictionUsers[{$counter}]" value="{xen:if $user, {$user.username}}" placeholder="{xen:phrase user_name}" size="15" class="textCtrl AutoComplete AcSingle" />]]></template>
+  </templates>
+  <public_template_modifications>
+    <modification template="footer" modification_key="th_copyrightNotice_imageRestrict" description="Copyright notice for [⌂] Image Restrictions" execution_order="1" enabled="1" action="callback">
+      <find><![CDATA[/{xen:phrase (?:xenforo|extra)_copyright}/]]></find>
+      <replace><![CDATA[ThemeHouse_Listener_InitDependencies::copyrightNotice]]></replace>
+    </modification>
+    <modification template="footer" modification_key="th_copyrightNotice_imageRestriction" description="Copyright notice for Image Restrictions by ThemeHouse" execution_order="1" enabled="1" action="callback">
+      <find><![CDATA[/{xen:phrase xenforo_copyright}/]]></find>
+      <replace><![CDATA[ThemeHouse_Listener_InitDependencies::copyrightNotice]]></replace>
+    </modification>
+    <modification template="post_edit" modification_key="th_postEdit_imageRestriction" description="Add image restriction options to post edit form." execution_order="10" enabled="1" action="preg_replace">
+      <find><![CDATA[#^.*$#si]]></find>
+      <replace><![CDATA[${0}
+<xen:include template="th_form_stuff_imagerestriction" />]]></replace>
+    </modification>
+    <modification template="thread_create" modification_key="th_threadCreate_imageRestriction" description="Add image restriction options to thread create form." execution_order="10" enabled="1" action="preg_replace">
+      <find><![CDATA[#^.*$#si]]></find>
+      <replace><![CDATA[${0}
+<xen:include template="th_form_stuff_imagerestriction" />]]></replace>
+    </modification>
+    <modification template="thread_reply" modification_key="th_threadReply_imageRestriction" description="Add image restriction options to post edit form." execution_order="10" enabled="1" action="preg_replace">
+      <find><![CDATA[#^.*$#si]]></find>
+      <replace><![CDATA[${0}
+<xen:include template="th_form_stuff_imagerestriction" />]]></replace>
+    </modification>
+  </public_template_modifications>
+  <bb_code_media_sites/>
+  <bb_codes/>
+</addon>
